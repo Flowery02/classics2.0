@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Классика 2.0 — форма меняется, сюжет вечен</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E0B14;
+  --ink-2:#15101F;
+  --panel:#1B1526;
+  --line:#2C2438;
+  --bone:#ECE4D4;
+  --bone-dim:#A89F8E;
+  --mute:#7A7188;
+  --gold:#C9A24B;
+  --gold-soft:#E0C57E;
+  --neon:#E0399C;
+  --neon-2:#C026D3;
+  --cyan:#34D6E8;
+  --maxw:1200px;
+  --serif:"Playfair Display",Georgia,serif;
+  --fut:"Unbounded",system-ui,sans-serif;
+  --body:"Manrope",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--body);
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;
+  opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.eyebrow{
+  font-family:var(--fut);font-weight:600;font-size:.66rem;letter-spacing:.34em;
+  text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:.7em;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;transition:background .4s,backdrop-filter .4s,padding .4s;
+}
+nav.scrolled{background:rgba(14,11,20,.82);backdrop-filter:blur(14px);padding:12px 28px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--fut);font-weight:800;font-size:1rem;letter-spacing:.02em}
+.brand b{background:linear-gradient(92deg,var(--gold-soft),var(--neon));-webkit-background-clip:text;background-clip:text;color:transparent}
+.navlinks{display:flex;gap:30px;font-family:var(--fut);font-weight:400;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+.navlinks a{color:var(--bone-dim);transition:color .25s;position:relative}
+.navlinks a:hover{color:var(--bone)}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:var(--neon);transition:width .3s}
+.navlinks a:hover::after{width:100%}
+@media(max-width:760px){.navlinks{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{
+  min-height:100vh;display:grid;grid-template-columns:1fr 1.08fr;
+  align-items:stretch;position:relative;
+}
+.hero-text{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 56px 80px;position:relative;z-index:2;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(192,38,211,.10), transparent 60%),
+    radial-gradient(120% 90% at 0% 100%, rgba(201,162,75,.10), transparent 60%),
+    var(--ink);
+}
+.hero-text h1{
+  font-family:var(--fut);font-weight:800;line-height:.96;
+  font-size:clamp(2.7rem,6vw,4.6rem);letter-spacing:-.01em;margin:22px 0 0;
+}
+.hero-text h1 .two{
+  background:linear-gradient(96deg,var(--gold-soft) 0%,var(--neon) 60%,var(--cyan) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-tag{
+  font-family:var(--serif);font-style:italic;font-weight:500;
+  font-size:clamp(1.25rem,2.5vw,1.9rem);color:var(--bone);
+  margin:26px 0 0;line-height:1.25;max-width:18ch;
+}
+.hero-tag .bar{color:var(--gold)}
+.hero-lead{color:var(--bone-dim);max-width:42ch;margin-top:22px;font-size:1.02rem}
+.hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.btn{
+  font-family:var(--fut);font-weight:600;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:15px 26px;border-radius:2px;cursor:pointer;border:1px solid transparent;transition:.25s;
+}
+.btn-primary{background:linear-gradient(96deg,var(--neon),var(--neon-2));color:#fff;box-shadow:0 8px 30px -10px var(--neon)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -10px var(--neon)}
+.btn-ghost{border-color:var(--line);color:var(--bone-dim)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-byline{margin-top:48px;font-family:var(--fut);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+
+.hero-media{position:relative;overflow:hidden;border-left:1px solid var(--line)}
+.hero-media .label{
+  position:absolute;z-index:5;top:74px;font-family:var(--fut);font-weight:600;
+  font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;padding:7px 13px;border-radius:2px;
+  backdrop-filter:blur(4px);
+}
+.hero-media .label.l{left:28px;color:var(--gold-soft);background:rgba(14,11,20,.5);border:1px solid rgba(201,162,75,.4)}
+.hero-media .label.r{right:28px;color:var(--cyan);background:rgba(14,11,20,.5);border:1px solid rgba(52,214,232,.4)}
+.scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:6;
+  font-family:var(--fut);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);
+  display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.8}
+.scrollcue .dot{width:1px;height:34px;background:linear-gradient(var(--neon),transparent);animation:cue 1.8s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.4);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+@media(max-width:880px){
+  .hero{grid-template-columns:1fr}
+  .hero-media{min-height:62vh;border-left:none;border-top:1px solid var(--line);order:2}
+  .hero-text{order:1;padding:110px 28px 50px}
+}
+
+/* ---------- COMPARE SLIDER ---------- */
+.cmp{position:absolute;inset:0;touch-action:none;cursor:ew-resize;overflow:hidden}
+.cmp .layer{position:absolute;inset:0}
+.cmp .top{clip-path:inset(0 0 0 50%);will-change:clip-path}
+.cmp .handle{
+  position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-1px);z-index:4;
+  background:linear-gradient(var(--gold),var(--neon),var(--cyan));box-shadow:0 0 18px rgba(224,57,156,.7);
+}
+.cmp .grip{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:46px;height:46px;border-radius:50%;background:rgba(14,11,20,.78);border:1.5px solid var(--bone);
+  display:grid;place-items:center;color:var(--bone);backdrop-filter:blur(4px);
+  box-shadow:0 6px 24px rgba(0,0,0,.5);
+}
+.cmp .grip svg{width:22px;height:22px}
+.cmp .handle:focus-visible{outline:none}
+.cmp:focus-within .grip{border-color:var(--neon);box-shadow:0 0 0 4px rgba(224,57,156,.25)}
+
+/* ---------- SECTION SHELL ---------- */
+section{position:relative;padding:108px 0}
+.sec-head{max-width:760px;margin-bottom:54px}
+.sec-head h2{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.4vw,3.1rem);line-height:1.08;margin:16px 0 0}
+.sec-head p{color:var(--bone-dim);margin-top:18px;max-width:60ch}
+
+/* ---------- ABOUT / MANIFESTO ---------- */
+#about{background:linear-gradient(180deg,var(--ink),var(--ink-2))}
+.manifesto{font-family:var(--serif);font-size:clamp(1.5rem,3.4vw,2.5rem);line-height:1.3;font-weight:500;max-width:20ch}
+.manifesto .hl{font-style:italic;color:var(--gold-soft)}
+.manifesto .hl2{font-style:italic;background:linear-gradient(96deg,var(--neon),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+.about-body p{color:var(--bone-dim);margin-bottom:16px}
+.about-body p b{color:var(--bone);font-weight:700}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:36px}}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:72px}
+.stat{background:var(--ink);padding:34px 26px}
+.stat .num{font-family:var(--fut);font-weight:800;font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;
+  background:linear-gradient(120deg,var(--gold-soft),var(--neon));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .cap{color:var(--bone-dim);font-size:.9rem;margin-top:12px;line-height:1.45}
+@media(max-width:860px){.stats{grid-template-columns:1fr 1fr}}
+
+/* ---------- GALLERY ---------- */
+.gal{display:flex;flex-direction:column;gap:90px}
+.work{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;border:1px solid var(--line);background:var(--panel);overflow:hidden}
+.work.flip .work-media{order:2}
+.work.flip .work-info{order:1}
+.work-media{position:relative;min-height:420px;background:#000}
+.work-info{padding:48px;display:flex;flex-direction:column;justify-content:center}
+.work-info .idx{font-family:var(--fut);font-size:.7rem;letter-spacing:.2em;color:var(--mute)}
+.work-info h3{font-family:var(--serif);font-weight:700;font-size:1.9rem;margin:10px 0 4px;line-height:1.1}
+.work-info .artist{color:var(--bone-dim);font-size:.96rem;margin-bottom:18px}
+.work-info .desc{color:var(--bone-dim);font-size:.96rem;margin-bottom:22px}
+.work-info .how{font-family:var(--fut);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:9px}
+.work-info .how svg{width:16px;height:16px}
+/* style chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.chip{font-family:var(--fut);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:10px 15px;border:1px solid var(--line);border-radius:2px;color:var(--bone-dim);cursor:pointer;transition:.2s;background:transparent}
+.chip:hover{border-color:var(--gold);color:var(--gold)}
+.chip.active{background:linear-gradient(96deg,var(--neon),var(--neon-2));border-color:transparent;color:#fff}
+.chip.orig{margin-right:6px}
+.chip.orig.active{background:linear-gradient(96deg,var(--gold),var(--gold-soft));color:#1a1305}
+.swapwrap{position:absolute;inset:0}
+.swapwrap .frame{position:absolute;inset:0;opacity:0;transition:opacity .55s ease}
+.swapwrap .frame.show{opacity:1}
+.swap-tag{position:absolute;left:20px;bottom:18px;z-index:6;font-family:var(--fut);font-size:.64rem;
+  letter-spacing:.16em;text-transform:uppercase;padding:7px 13px;background:rgba(14,11,20,.6);
+  border:1px solid var(--line);border-radius:2px;backdrop-filter:blur(4px)}
+@media(max-width:860px){
+  .work,.work.flip .work-media,.work.flip .work-info{grid-template-columns:1fr;order:unset}
+  .work{grid-template-columns:1fr}
+  .work-media{min-height:340px}
+  .work-info{padding:32px}
+}
+
+/* ---------- STYLES MARQUEE ---------- */
+#styles{padding:70px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink-2)}
+.marq{display:flex;gap:18px;width:max-content;animation:scrollx 34s linear infinite}
+.marq-mask{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.style-pill{font-family:var(--fut);font-weight:600;font-size:1.15rem;padding:14px 26px;border:1px solid var(--line);border-radius:100px;color:var(--bone-dim);white-space:nowrap}
+.style-pill:nth-child(3n){color:var(--gold-soft);border-color:rgba(201,162,75,.4)}
+.style-pill:nth-child(3n+1){color:var(--cyan);border-color:rgba(52,214,232,.3)}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ---------- SURVEY ---------- */
+#survey{background:linear-gradient(180deg,var(--ink-2),var(--ink))}
+.survey-box{max-width:820px;margin:0 auto}
+.q{border:1px solid var(--line);background:var(--panel);padding:30px 30px 26px;margin-bottom:18px;border-radius:3px;transition:border-color .3s}
+.q.answered{border-color:rgba(201,162,75,.35)}
+.q .qn{font-family:var(--fut);font-size:.66rem;letter-spacing:.2em;color:var(--mute)}
+.q h4{font-family:var(--serif);font-weight:500;font-size:1.4rem;margin:8px 0 20px;line-height:1.25}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opt{flex:1 1 auto;min-width:120px;font-family:var(--body);font-weight:500;font-size:.98rem;
+  padding:14px 18px;border:1px solid var(--line);background:transparent;color:var(--bone);
+  border-radius:3px;cursor:pointer;transition:.2s;text-align:left;position:relative;overflow:hidden}
+.opt:hover{border-color:var(--neon);transform:translateY(-1px)}
+.opt.sel{border-color:transparent;background:linear-gradient(96deg,var(--neon),var(--neon-2));color:#fff}
+/* result bar revealed after submit */
+.opt .fill{position:absolute;inset:0;background:linear-gradient(90deg,rgba(201,162,75,.28),rgba(224,57,156,.2));
+  width:0;transition:width .9s cubic-bezier(.2,.7,.2,1);z-index:-1}
+.opt.sel .fill{background:rgba(255,255,255,.22)}
+.opt .pct{float:right;font-family:var(--fut);font-size:.78rem;opacity:0;transition:opacity .4s;margin-left:10px}
+.results-on .opt .pct{opacity:1}
+.results-on .opt{cursor:default}
+.results-on .opt:hover{transform:none;border-color:var(--line)}
+.results-on .opt.sel:hover{border-color:transparent}
+.survey-foot{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.note{color:var(--mute);font-size:.82rem;max-width:46ch}
+.thanks{display:none;margin-top:26px;padding:26px 28px;border:1px solid rgba(201,162,75,.4);
+  background:linear-gradient(96deg,rgba(201,162,75,.08),rgba(224,57,156,.06));border-radius:3px}
+.thanks.show{display:block;animation:rise .6s ease both}
+.thanks p{font-family:var(--serif);font-size:1.25rem;font-style:italic}
+.thanks .sub{font-family:var(--body);font-style:normal;color:var(--bone-dim);font-size:.95rem;margin-top:8px}
+
+/* ---------- FOOTER ---------- */
+footer{padding:70px 0 56px;border-top:1px solid var(--line);text-align:center}
+footer .ftitle{font-family:var(--fut);font-weight:800;font-size:1.4rem}
+footer .ftitle b{background:linear-gradient(92deg,var(--gold-soft),var(--neon));-webkit-background-clip:text;background-clip:text;color:transparent}
+footer .ftag{font-family:var(--serif);font-style:italic;color:var(--bone-dim);margin-top:10px}
+footer .meta{font-family:var(--fut);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);margin-top:26px}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="brand">Классика <b>2.0</b></div>
+  <div class="navlinks">
+    <a href="#about">О проекте</a>
+    <a href="#gallery">Галерея</a>
+    <a href="#styles">Стили</a>
+    <a href="#survey">Опрос</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">ИИ-стилизация классической живописи</span>
+    <h1>Классика <span class="two">2.0</span></h1>
+    <p class="hero-tag"><span class="bar">|</span> Форма меняется,<br>а сюжет — вечен.</p>
+    <p class="hero-lead">Виртуальная выставка, где великие полотна предстают в оригинале и в современных стилях — аниме, киберпанк, пиксель-арт. Потяните за ползунок и сравните сами.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="document.getElementById('gallery').scrollIntoView()">Войти в галерею</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('survey').scrollIntoView()">Пройти опрос</button>
+    </div>
+    <div class="hero-byline">Проект · Ершов Николай Анатольевич</div>
+  </div>
+
+  <div class="hero-media">
+    <span class="label l">Оригинал · да Винчи</span>
+    <span class="label r">Киберпанк · ИИ</span>
+    <div class="cmp" id="heroCmp" data-start="62">
+      <div class="layer bottom"><img data-img="mona_orig" alt="Мона Лиза, оригинал"></div>
+      <div class="layer top" data-clip><img data-img="mona_cyber" alt="Мона Лиза в стиле киберпанк"></div>
+      <div class="handle" tabindex="0" role="slider" aria-label="Сравнить оригинал и стилизацию" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <div class="grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div>
+      </div>
+    </div>
+    <div class="scrollcue">Листайте<div class="dot"></div></div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Зачем это нужно</span>
+      <h2>Молодёжь зовёт классику скучной.<br>Мы не спорим — мы её переодеваем.</h2>
+    </div>
+    <div class="about-grid">
+      <p class="manifesto reveal">«Бурлаков» в <span class="hl2">постапокалипсис</span>, Шишкина — в <span class="hl2">пиксель-арт</span>, а сюжет под краской остаётся <span class="hl">тем же самым</span>.</p>
+      <div class="about-body reveal">
+        <p>Люди 18–22 лет редко обращаются к живописи: клиповое мышление, перегрузка визуальным контентом и отсутствие «точек входа» в мир высокого искусства.</p>
+        <p>Нейросеть <b>Kandinsky</b> позволяет «переодеть» классические сюжеты в популярные стили и показать их там, где молодёжь уже живёт — в ленте Telegram. Контраст «оригинал vs ИИ» заставляет остановиться, сравнить и запомнить картину.</p>
+        <p>Проект отвечает и на запрос времени: внедрение ИИ в социальную и культурную сферу — одна из задач <b>Национальной стратегии развития ИИ до 2030 года</b>.</p>
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><div class="num" data-count="90">0</div><div class="cap">не смогли назвать 5 картин русских художников</div></div>
+      <div class="stat"><div class="num" data-count="65">0</div><div class="cap">считают классическую живопись скучной</div></div>
+      <div class="stat"><div class="num" data-count="80">0</div><div class="cap">не были на выставке за последний год</div></div>
+      <div class="stat"><div class="num" data-count="55">0</div><div class="cap">смотрят на одно произведение меньше минуты</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Продукт проекта</span>
+      <h2>Галерея «до и после»</h2>
+      <p>Десять полотен прошли через нейросеть. Тяните ползунок, чтобы стереть века, или примерьте картине новый стиль одним касанием.</p>
+    </div>
+    <div class="gal" id="gal"></div>
+  </div>
+</section>
+
+<!-- STYLES MARQUEE -->
+<section id="styles">
+  <div class="wrap" style="margin-bottom:34px">
+    <span class="eyebrow reveal">Палитра стилей</span>
+  </div>
+  <div class="marq-mask">
+    <div class="marq" id="marq"></div>
+  </div>
+</section>
+
+<!-- SURVEY -->
+<section id="survey">
+  <div class="wrap">
+    <div class="sec-head reveal" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow" style="justify-content:center">Ваш голос</span>
+      <h2>А как у вас с искусством?</h2>
+      <p style="margin-left:auto;margin-right:auto">Те же вопросы, что мы задавали студентам. Ответьте — и сразу увидите, как распределились голоса всех участников.</p>
+    </div>
+    <div class="survey-box reveal" id="surveyBox"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="ftitle">Классика <b>2.0</b></div>
+    <div class="ftag">Форма меняется, а сюжет — вечен.</div>
+    <div class="meta">Виртуальная выставка · Нейросеть Kandinsky · Ершов Николай Анатольевич</div>
+  </div>
+</footer>
+
+<script>
+const IMG = {
+  "burlaki_orig": "images/burlaki_orig.jpg",
+  "burlaki_post": "images/burlaki_post.jpg",
+  "starry_orig":  "images/starry_orig.jpg",
+  "starry_anime":  "images/starry_anime.jpg",
+  "square_orig":  "images/square_orig.jpg",
+  "square_cyber":  "images/square_cyber.jpg",
+  "bog_orig":  "images/bog_orig.jpg",
+  "bog_realism":  "images/bog_realism.jpg",
+  "bog_darkfantasy":  "images/bog_darkfantasy.jpg",
+  "bog_cyber":  "images/bog_cyber.jpg",
+  "bog_anime":  "images/bog_anime.jpg",
+  "horse_orig":  "images/horse_orig.jpg",
+  "horse_futurism":  "images/horse_futurism.jpg",
+  "horse_symbolism":  "images/horse_symbolism.jpg",
+  "horse_popart":  "images/horse_popart.jpg",
+  "horse_clay":  "images/horse_clay.jpg",
+  "shi_orig":  "images/shi_orig.jpg",
+  "shi_surreal":  "images/shi_surreal.jpg",
+  "shi_pixel":  "images/shi_pixel.jpg",
+  "shi_steampunk":  "images/shi_steampunk.jpg",
+  "mona_orig":  "images/mona_orig.jpg?v=2",
+  "mona_cyber":  "images/mona_cyber.jpg"
+};
+
+const src = k => IMG[k] || "";
+document.querySelectorAll('[data-img]').forEach(el => {
+  el.src = IMG[el.dataset.img];
+});
+// hydrate hero + any data-img
+
+/* ---------------- COMPARE SLIDER ---------------- */
+function initCmp(root){
+  const top=root.querySelector('[data-clip]');
+  const handle=root.querySelector('.handle');
+  let pct=parseFloat(root.dataset.start||50);
+  const set=p=>{
+    pct=Math.max(0,Math.min(100,p));
+    top.style.clipPath=`inset(0 0 0 ${pct}%)`;
+    handle.style.left=pct+'%';
+    handle.setAttribute('aria-valuenow',Math.round(pct));
+  };
+  const fromX=clientX=>{const r=root.getBoundingClientRect();set((clientX-r.left)/r.width*100)};
+  let drag=false;
+  const down=e=>{drag=true;root.setPointerCapture?.(e.pointerId);fromX(e.clientX);e.preventDefault()};
+  const move=e=>{if(drag)fromX(e.clientX)};
+  const up=()=>drag=false;
+  root.addEventListener('pointerdown',down);
+  root.addEventListener('pointermove',move);
+  window.addEventListener('pointerup',up);
+  handle.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){set(pct-4);e.preventDefault()}
+    if(e.key==='ArrowRight'){set(pct+4);e.preventDefault()}
+  });
+  set(pct);
+  return set;
+}
+const heroSet=initCmp(document.getElementById('heroCmp'));
+// hero auto-sweep once on load
+window.addEventListener('load',()=>{
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  let t=0;const start=performance.now();
+  const seq=[ [0,62],[1,18],[2,82],[3,55] ];
+  function anim(now){
+    const e=(now-start)/2600;
+    if(e>=1){heroSet(55);return}
+    // ease through keypoints
+    const seg=e*3, i=Math.min(2,Math.floor(seg)), f=seg-i;
+    const a=[62,18,82,55][i], b=[62,18,82,55][i+1];
+    const ease=f<.5?2*f*f:1-Math.pow(-2*f+2,2)/2;
+    heroSet(a+(b-a)*ease);
+    requestAnimationFrame(anim);
+  }
+  setTimeout(()=>requestAnimationFrame(anim),500);
+});
+
+/* ---------------- GALLERY DATA ---------------- */
+const compareWorks=[
+  {title:"Бурлаки на Волге",artist:"Илья Репин · 1873",style:"Постапокалипсис",
+   orig:"burlaki_orig",styled:"burlaki_post",
+   desc:"Та же шеренга, та же лямка — но вместо Волги выжженная пустошь и ржавый остов баржи. Тяжесть труда переживает любую эпоху."},
+  {title:"Звёздная ночь",artist:"Винсент Ван Гог · 1889",style:"Аниме · Ghibli",
+   orig:"starry_orig",styled:"starry_anime",
+   desc:"Вихри неба Ван Гога превращаются в тёплую сказку студии Ghibli — буря успокаивается, но звёзды всё так же кружат."},
+  {title:"Чёрный квадрат",artist:"Казимир Малевич · 1915",style:"Киберпанк",
+   orig:"square_orig",styled:"square_cyber",
+   desc:"Самый радикальный жест в истории живописи вспыхивает неоновым контуром. Пустота, которая по-прежнему гипнотизирует."}
+];
+const swapWorks=[
+  {title:"Богатыри",artist:"Виктор Васнецов · 1898",
+   orig:"bog_orig",desc:"Три заставы Руси примеряют четыре эпохи сразу.",
+   variants:[["Реализм","bog_realism"],["Dark Fantasy","bog_darkfantasy"],["Киберпанк","bog_cyber"],["Аниме","bog_anime"]]},
+  {title:"Купание красного коня",artist:"Кузьма Петров-Водкин · 1912",
+   orig:"horse_orig",desc:"Алый конь не тускнеет ни в одном из стилей.",
+   variants:[["Футуризм","horse_futurism"],["Символизм","horse_symbolism"],["Поп-арт","horse_popart"],["Пластилин","horse_clay"]]},
+  {title:"Утро в сосновом лесу",artist:"Иван Шишкин · 1889",
+   orig:"shi_orig",desc:"Медведи на буреломе сменяют три настроения леса.",
+   variants:[["Сюрреализм","shi_surreal"],["Пиксель-арт","shi_pixel"],["Стимпанк","shi_steampunk"]]}
+];
+
+const gal=document.getElementById('gal');
+let idx=0;
+const eyeSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12s3-7 8-7 8 7 8 7-3 7-8 7-8-7-8-7z"/><circle cx="12" cy="12" r="2.5"/></svg>';
+const dragSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>';
+
+// interleave compare + swap works
+const order=[compareWorks[0],swapWorks[0],compareWorks[1],swapWorks[1],compareWorks[2],swapWorks[2]];
+order.forEach((w,i)=>{
+  idx++;
+  const flip = i%2===1 ? 'flip':'';
+  const num=String(idx).padStart(2,'0');
+  const el=document.createElement('div');
+  el.className='work reveal '+flip;
+  if(w.variants){ // swap card
+    el.innerHTML=`
+      <div class="work-media">
+        <div class="swapwrap" data-swap>
+          <div class="frame show"><img src="${src(w.orig)}" alt=""></div>
+          ${w.variants.map(v=>`<div class="frame"><img src="${src(v[1])}" alt=""></div>`).join('')}
+        </div>
+        <div class="swap-tag" data-tag>Оригинал</div>
+      </div>
+      <div class="work-info">
+        <span class="idx">${num} / ПОЛОТНО</span>
+        <h3>${w.title}</h3>
+        <div class="artist">${w.artist}</div>
+        <div class="desc">${w.desc}</div>
+        <div class="how" style="margin-bottom:14px">${eyeSvg} Примерьте стиль</div>
+        <div class="chips">
+          <button class="chip orig active" data-i="0">Оригинал</button>
+          ${w.variants.map((v,vi)=>`<button class="chip" data-i="${vi+1}">${v[0]}</button>`).join('')}
+        </div>
+      </div>`;
+    gal.appendChild(el);
+    const frames=el.querySelectorAll('.frame');
+    const chips=el.querySelectorAll('.chip');
+    const tag=el.querySelector('[data-tag]');
+    const names=['Оригинал',...w.variants.map(v=>v[0])];
+    chips.forEach(c=>c.addEventListener('click',()=>{
+      const k=+c.dataset.i;
+      frames.forEach((f,fi)=>f.classList.toggle('show',fi===k));
+      chips.forEach(x=>x.classList.remove('active'));c.classList.add('active');
+      tag.textContent=names[k];
+    }));
+  } else { // compare slider card
+    el.innerHTML=`
+      <div class="work-media">
+        <div class="cmp" data-start="50" style="cursor:ew-resize">
+          <div class="layer bottom"><img src="${src(w.orig)}" alt="${w.title} — оригинал"></div>
+          <div class="layer top" data-clip><img src="${src(w.styled)}" alt="${w.title} — ${w.style}"></div>
+          <div class="handle" tabindex="0" role="slider" aria-label="Сравнить" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+            <div class="grip">${dragSvg}</div>
+          </div>
+        </div>
+        <div class="swap-tag" style="left:20px">Оригинал</div>
+        <div class="swap-tag" style="left:auto;right:20px">${w.style}</div>
+      </div>
+      <div class="work-info">
+        <span class="idx">${num} / ПОЛОТНО</span>
+        <h3>${w.title}</h3>
+        <div class="artist">${w.artist}</div>
+        <div class="desc">${w.desc}</div>
+        <div class="how">${dragSvg} Тяните, чтобы сравнить</div>
+      </div>`;
+    gal.appendChild(el);
+    initCmp(el.querySelector('.cmp'));
+  }
+});
+
+/* ---------------- STYLES MARQUEE ---------------- */
+const styleList=["Аниме","Киберпанк","Пиксель-арт","Постапокалипсис","Dark Fantasy","Поп-арт","Стимпанк","Пластилин","Футуризм","Символизм","Сюрреализм","Ghibli"];
+const marq=document.getElementById('marq');
+const fill=()=>styleList.map(s=>`<span class="style-pill">${s}</span>`).join('');
+marq.innerHTML=fill()+fill();
+
+/* ---------------- SURVEY ---------------- */
+const QS=[
+  {id:"q1",q:"Можете ли вы назвать 5 известных картин русских художников?",opts:["Да","Нет"],seed:[80,20]},
+  {id:"q2",q:"Считаете ли вы классическую живопись скучной?",opts:["Да","Нет"],seed:[45,55]},
+  {id:"q3",q:"Посетили ли вы хоть одну художественную выставку за последний год?",opts:["Да","Нет"],seed:[20,80]},
+  {id:"q4",q:"Сколько времени вы готовы рассматривать одно произведение искусства?",opts:["Менее 1 минуты","1–3 минуты","3–10 минут","10+ минут"],seed:[35,35,25,5]}
+];
+const box=document.getElementById('surveyBox');
+const picked={};
+QS.forEach((Q,qi)=>{
+  const q=document.createElement('div');q.className='q';q.id=Q.id;
+  q.innerHTML=`<div class="qn">ВОПРОС ${qi+1} / ${QS.length}</div><h4>${Q.q}</h4>
+    <div class="opts">${Q.opts.map((o,oi)=>`<button class="opt" data-q="${qi}" data-o="${oi}"><span class="fill"></span>${o}<span class="pct"></span></button>`).join('')}</div>`;
+  box.appendChild(q);
+});
+const foot=document.createElement('div');foot.className='survey-foot';
+foot.innerHTML=`<button class="btn btn-primary" id="sendBtn" disabled style="opacity:.5">Показать результаты</button>
+  <span class="note">Ваши ответы анонимны и суммируются с голосами других посетителей, формируя общую статистику ниже.</span>`;
+box.appendChild(foot);
+const thanks=document.createElement('div');thanks.className='thanks';
+thanks.innerHTML=`<p>Спасибо — ваш голос засчитан.</p><p class="sub" id="thanksSub"></p>`;
+box.appendChild(thanks);
+
+const sendBtn=document.getElementById('sendBtn');
+box.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{
+  if(box.classList.contains('results-on'))return;
+  const qi=+o.dataset.q;
+  box.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(x=>x.classList.remove('sel'));
+  o.classList.add('sel');
+  picked[qi]=+o.dataset.o;
+  document.getElementById(QS[qi].id).classList.add('answered');
+  if(Object.keys(picked).length===QS.length){sendBtn.disabled=false;sendBtn.style.opacity=1}
+}));
+
+const STORE_KEY='klassika2_survey_v1';
+async function loadCounts(){
+  // start from presentation seed
+  const counts=QS.map(Q=>Q.seed.slice());
+  try{
+    if(window.storage){
+      const r=await window.storage.get(STORE_KEY,true);
+      if(r&&r.value){const saved=JSON.parse(r.value);
+        saved.forEach((arr,qi)=>arr.forEach((n,oi)=>counts[qi][oi]+=n));}
+    }
+  }catch(e){}
+  return counts;
+}
+async function saveVote(){
+  if(!window.storage)return;
+  try{
+    let saved=QS.map(Q=>Q.opts.map(()=>0));
+    const r=await window.storage.get(STORE_KEY,true);
+    if(r&&r.value)saved=JSON.parse(r.value);
+    Object.entries(picked).forEach(([qi,oi])=>{saved[qi][oi]=(saved[qi][oi]||0)+1});
+    await window.storage.set(STORE_KEY,JSON.stringify(saved),true);
+  }catch(e){}
+}
+function renderResults(counts){
+  QS.forEach((Q,qi)=>{
+    const total=counts[qi].reduce((a,b)=>a+b,0)||1;
+    box.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(opt=>{
+      const oi=+opt.dataset.o;
+      const pct=Math.round(counts[qi][oi]/total*100);
+      opt.querySelector('.fill').style.width=pct+'%';
+      opt.querySelector('.pct').textContent=pct+'%';
+    });
+  });
+}
+sendBtn.addEventListener('click',async()=>{
+  sendBtn.disabled=true;sendBtn.textContent='Голос учтён';sendBtn.style.opacity=.6;
+  await saveVote();
+  const counts=await loadCounts();
+  box.classList.add('results-on');
+  renderResults(counts);
+  // closing line based on how "classic-friendly" they are
+  const friendly=(picked[0]===0)+(picked[1]===1)+(picked[2]===0)+(picked[3]>=2);
+  const lines=[
+    "Похоже, классика пока проходит мимо вас — самое время «переодеть» её и взглянуть заново.",
+    "Вы где-то посередине: пара ярких стилизаций — и интерес проснётся окончательно.",
+    "Вы цените искусство — а «Классика 2.0» поможет смотреть на него ещё и по-новому.",
+    "Вы настоящий ценитель. Сравните оригиналы с ИИ-версиями выше — будет о чём поспорить!"
+  ];
+  document.getElementById('thanksSub').textContent=lines[Math.min(3,friendly)];
+  thanks.classList.add('show');
+});
+
+/* ---------------- SCROLL FX ---------------- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// count-up stats
+const sio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;sio.unobserve(e.target);
+  const end=+e.target.dataset.count;let cur=0;const step=end/40;
+  const t=setInterval(()=>{cur+=step;if(cur>=end){cur=end;clearInterval(t)}e.target.textContent=Math.round(cur)+'%'},22);
+}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>sio.observe(el));
+</script>
+</body>
+</html>
